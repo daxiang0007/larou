@@ -1,0 +1,777 @@
+<title>The Winter Cure</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Karla:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --bg:#E8E0CC;
+    --bg-raised:#DED2B0;
+    --bg-deep:#D3C69C;
+    --ink:#2A2018;
+    --ink-soft:#5B4E3D;
+    --ink-faint:#8A7C63;
+    --accent:#8C2E1D;
+    --accent-strong:#6E2415;
+    --accent-2:#B9812A;
+    --line: rgba(42,32,24,0.16);
+    --card-shadow: 0 1px 0 rgba(42,32,24,0.08);
+    --smoke: rgba(90,80,64,0.35);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1712;
+      --bg-raised:#252019;
+      --bg-deep:#171310;
+      --ink:#EDE3CE;
+      --ink-soft:#C2B49A;
+      --ink-faint:#8C7E67;
+      --accent:#DD8058;
+      --accent-strong:#E89B72;
+      --accent-2:#E4B564;
+      --line: rgba(237,227,206,0.14);
+      --card-shadow: 0 1px 0 rgba(0,0,0,0.3);
+      --smoke: rgba(220,210,190,0.18);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1712;
+    --bg-raised:#252019;
+    --bg-deep:#171310;
+    --ink:#EDE3CE;
+    --ink-soft:#C2B49A;
+    --ink-faint:#8C7E67;
+    --accent:#DD8058;
+    --accent-strong:#E89B72;
+    --accent-2:#E4B564;
+    --line: rgba(237,227,206,0.14);
+    --card-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    --smoke: rgba(220,210,190,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Karla", ui-sans-serif, system-ui, sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{
+    font-family:"Newsreader", Georgia, "Times New Roman", serif;
+    font-weight:500;
+    text-wrap:balance;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .zh{
+    font-family:"Noto Serif SC", "Newsreader", serif;
+    font-weight:700;
+  }
+
+  .wrap{
+    max-width:1040px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+  .prose{
+    max-width:640px;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:.55em;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .eyebrow .zh{ font-size:13px; letter-spacing:0; text-transform:none; color:var(--accent-strong); }
+
+  a{ color:var(--accent); }
+
+  /* ---------- reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.is-visible{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* ---------- header / hero ---------- */
+  header.hero{
+    position:relative;
+    padding:88px 0 120px;
+    background:
+      radial-gradient(ellipse 900px 500px at 80% -10%, var(--bg-deep), transparent 60%),
+      var(--bg);
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media (max-width:820px){
+    .hero-grid{ grid-template-columns:1fr; }
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 5vw, 4.1rem);
+    line-height:1.04;
+    margin:18px 0 22px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--accent-strong);
+  }
+  .hero p.sub{
+    max-width:46ch;
+    color:var(--ink-soft);
+    font-size:1.14rem;
+  }
+  .scrollcue{
+    margin-top:46px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .scrollcue svg{ animation:bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(5px);} }
+  @media (prefers-reduced-motion: reduce){ .scrollcue svg{ animation:none; } }
+
+  /* hanging meat illustration */
+  .rig{ position:relative; height:360px; }
+  .beam{
+    position:absolute; top:0; left:6%; right:6%; height:10px;
+    background: linear-gradient(var(--ink-soft), var(--ink));
+    border-radius:2px;
+    box-shadow: var(--card-shadow);
+  }
+  .cut{ position:absolute; top:10px; }
+  .cut .string{
+    position:absolute; top:0; left:50%; width:1.5px; height:26px;
+    background:var(--ink-faint);
+  }
+  .cut .body{
+    margin-top:26px;
+    width:54px; height:120px;
+    border-radius:44% 44% 50% 50% / 34% 34% 62% 62%;
+    box-shadow: inset -8px -10px 18px rgba(0,0,0,0.18), var(--card-shadow);
+  }
+  .cut.c1{ left:10%; }
+  .cut.c1 .body{ background: linear-gradient(160deg, #C9793F, var(--accent-strong) 60%, var(--accent) 100%); width:48px; height:100px; }
+  .cut.c2{ left:34%; }
+  .cut.c2 .body{ background: linear-gradient(160deg, #D98B47, var(--accent) 55%, var(--accent-strong) 100%); width:60px; height:150px; }
+  .cut.c3{ left:62%; }
+  .cut.c3 .body{ background: linear-gradient(160deg, #E0A560, #C9702F 55%, var(--accent-strong) 100%); width:50px; height:118px; }
+  .cut.c4{ left:84%; }
+  .cut.c4 .body{ background: linear-gradient(160deg, #B9812A, #8C4A1F 60%, var(--accent-strong) 100%); width:44px; height:92px; }
+
+  .smoke{
+    position:absolute;
+    bottom:-10px;
+    width:80px; height:160px;
+    opacity:.55;
+    filter:blur(1px);
+  }
+  .smoke path{
+    fill:none;
+    stroke:var(--smoke);
+    stroke-width:10;
+    stroke-linecap:round;
+    animation: rise 7s ease-in-out infinite;
+  }
+  .smoke.s1{ left:2%; }
+  .smoke.s2{ left:46%; animation-delay:-3s; }
+  @keyframes rise{
+    0%{ transform:translateY(20px) scaleX(1); opacity:0; }
+    18%{ opacity:.5; }
+    100%{ transform:translateY(-140px) scaleX(1.3); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){ .smoke path{ animation:none; opacity:.25; } }
+
+  /* ---------- sections ---------- */
+  section{ padding:96px 0; }
+  section.raised{ background:var(--bg-raised); }
+  section.deep{ background:var(--bg-deep); }
+
+  .section-head{ margin-bottom:52px; }
+  .section-head h2{ font-size:clamp(1.7rem,3vw,2.3rem); margin-top:12px; }
+  .section-head p{ color:var(--ink-soft); max-width:58ch; margin-top:14px; }
+
+  /* ---------- comparison table ---------- */
+  .table-scroll{ overflow-x:auto; margin-top:8px; }
+  table.compare{
+    border-collapse:collapse;
+    width:100%;
+    min-width:640px;
+    font-size:.96rem;
+  }
+  table.compare th, table.compare td{
+    text-align:left;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.compare thead th{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    font-weight:500;
+    border-bottom:1px solid var(--ink-faint);
+  }
+  table.compare th[scope="row"]{
+    font-family:"Newsreader", serif;
+    font-size:1.05rem;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  table.compare tr.highlight td, table.compare tr.highlight th[scope="row"]{
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+  }
+  table.compare tr.highlight th[scope="row"]{ color:var(--accent-strong); font-weight:600; }
+
+  /* ---------- etymology ---------- */
+  .glyph-block{
+    display:grid;
+    grid-template-columns: auto 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  @media (max-width:700px){ .glyph-block{ grid-template-columns:1fr; } }
+  .glyph-big{
+    font-size:9rem;
+    line-height:1;
+    color:var(--accent-strong);
+    user-select:none;
+  }
+  details.reveal-card{
+    border-top:1px solid var(--line);
+    padding:18px 0;
+  }
+  details.reveal-card + details.reveal-card{ border-top:1px solid var(--line); }
+  details.reveal-card summary{
+    cursor:pointer;
+    font-family:"Newsreader", serif;
+    font-size:1.15rem;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    list-style:none;
+  }
+  details.reveal-card summary::-webkit-details-marker{ display:none; }
+  details.reveal-card summary::before{
+    content:"+";
+    font-family:"IBM Plex Mono", monospace;
+    color:var(--accent);
+    font-size:1rem;
+    width:1em;
+  }
+  details.reveal-card[open] summary::before{ content:"–"; }
+  details.reveal-card .body{
+    margin:12px 0 0 1.6em;
+    color:var(--ink-soft);
+    max-width:56ch;
+  }
+  details.reveal-card .note{
+    display:block; margin-top:10px; font-size:.92rem; color:var(--ink-faint);
+  }
+
+  /* ---------- timeline ---------- */
+  .timeline{
+    position:relative;
+    margin-top:12px;
+    padding-left:34px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:6px; top:6px; bottom:6px;
+    width:2px;
+    background: linear-gradient(var(--ink-faint), var(--line));
+  }
+  .tl-item{
+    position:relative;
+    padding-bottom:52px;
+  }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:"";
+    position:absolute;
+    left:-34px; top:6px;
+    width:13px; height:13px;
+    border-radius:50%;
+    background:var(--bg-raised);
+    border:2px solid var(--accent);
+  }
+  .tl-date{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    letter-spacing:.05em;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+  }
+  .tl-item h3{ font-size:1.3rem; margin:6px 0 8px; }
+  .tl-item p{ color:var(--ink-soft); max-width:56ch; margin:0; }
+
+  /* ---------- regional carousel ---------- */
+  .carousel{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    scroll-snap-type:x proximity;
+    padding:6px 6px 20px;
+    margin:0 -6px;
+  }
+  .region-card{
+    flex:0 0 300px;
+    scroll-snap-align:start;
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:26px 24px 28px;
+    box-shadow:var(--card-shadow);
+  }
+  section.raised .region-card{ background:var(--bg-raised); }
+  .region-card .swatch{
+    width:38px; height:10px;
+    margin-bottom:18px;
+  }
+  .region-card h3{ font-size:1.2rem; margin-bottom:4px; }
+  .region-card .place{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:14px;
+    display:block;
+  }
+  .region-card p{ color:var(--ink-soft); font-size:.95rem; margin:0; }
+
+  /* ---------- process steps ---------- */
+  .steps{ margin-top:20px; }
+  .steps input[type="radio"]{ position:absolute; opacity:0; pointer-events:none; }
+  .step-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:36px;
+  }
+  .step-tabs label{
+    cursor:pointer;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:12.5px;
+    letter-spacing:.04em;
+    padding:9px 16px;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    user-select:none;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .step-tabs label span.n{ color:var(--accent); margin-right:.5em; }
+  .step-panels{ position:relative; min-height:220px; }
+  .step-panel{
+    display:none;
+    grid-template-columns: 96px 1fr;
+    gap:32px;
+    align-items:flex-start;
+  }
+  .step-panel h3{ font-size:1.4rem; margin-bottom:10px; }
+  .step-panel p{ color:var(--ink-soft); max-width:54ch; }
+  .step-icon{
+    width:96px; height:96px;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-raised);
+  }
+  section.deep .step-icon{ background:var(--bg); }
+  .step-icon svg{ width:52px; height:52px; stroke:var(--accent); fill:none; stroke-width:1.6; }
+
+  #s1:checked ~ .step-tabs label[for="s1"],
+  #s2:checked ~ .step-tabs label[for="s2"],
+  #s3:checked ~ .step-tabs label[for="s3"],
+  #s4:checked ~ .step-tabs label[for="s4"],
+  #s5:checked ~ .step-tabs label[for="s5"]{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
+  #s1:checked ~ .step-tabs label[for="s1"] span.n,
+  #s2:checked ~ .step-tabs label[for="s2"] span.n,
+  #s3:checked ~ .step-tabs label[for="s3"] span.n,
+  #s4:checked ~ .step-tabs label[for="s4"] span.n,
+  #s5:checked ~ .step-tabs label[for="s5"] span.n{ color:#fff; }
+
+  #s1:checked ~ .step-panels .panel-1,
+  #s2:checked ~ .step-panels .panel-2,
+  #s3:checked ~ .step-panels .panel-3,
+  #s4:checked ~ .step-panels .panel-4,
+  #s5:checked ~ .step-panels .panel-5{ display:grid; }
+
+  @media (max-width:600px){
+    .step-panel{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- pull quote / culture ---------- */
+  .pull{
+    border-left:3px solid var(--accent);
+    padding-left:28px;
+    margin:8px 0 0;
+    max-width:640px;
+  }
+  .pull p{ font-family:"Newsreader", serif; font-style:italic; font-size:1.35rem; line-height:1.45; color:var(--ink); }
+  .pull cite{ display:block; margin-top:14px; font-style:normal; font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.06em; color:var(--ink-faint); }
+
+  /* ---------- footer / close ---------- */
+  footer{
+    padding:80px 0 60px;
+    border-top:1px solid var(--line);
+  }
+  footer .cols{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap:40px;
+  }
+  @media (max-width:700px){ footer .cols{ grid-template-columns:1fr; } }
+  footer h2{ font-size:1.7rem; margin-bottom:14px; }
+  footer p{ color:var(--ink-soft); max-width:54ch; }
+  .try-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .try-list li{
+    display:flex; gap:14px; align-items:baseline;
+    font-size:.98rem; color:var(--ink-soft);
+    border-bottom:1px solid var(--line);
+    padding-bottom:14px;
+  }
+  .try-list li strong{ color:var(--ink); font-weight:600; min-width:150px; }
+  .colophon{
+    margin-top:64px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11.5px;
+    color:var(--ink-faint);
+    letter-spacing:.03em;
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="zh">臘肉</span> · LÀ RÒU</span>
+      <h1>The meat that<br>waited for <em>winter</em>.</h1>
+      <p class="sub">Salted, hung from the rafters, and cured in cold mountain air — làròu is China's oldest answer to a question every winter once forced: how do you make a pig outlast the season?</p>
+      <div class="scrollcue">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 1v17M1 12l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Scroll to begin
+      </div>
+    </div>
+    <div class="rig" aria-hidden="true">
+      <div class="beam"></div>
+      <svg class="smoke s1" viewBox="0 0 80 160"><path d="M20 150 Q35 120 15 95 Q-5 70 20 45 Q40 25 20 5"/></svg>
+      <svg class="smoke s2" viewBox="0 0 80 160"><path d="M20 150 Q5 120 25 95 Q45 70 20 45 Q0 25 20 5"/></svg>
+      <div class="cut c1"><div class="string"></div><div class="body"></div></div>
+      <div class="cut c2"><div class="string"></div><div class="body"></div></div>
+      <div class="cut c3"><div class="string"></div><div class="body"></div></div>
+      <div class="cut c4"><div class="string"></div><div class="body"></div></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">01 · The basics</span>
+      <h2>China's cured meat, in terms you already know</h2>
+      <p>If you've torn into prosciutto, fried a strip of bacon, or gnawed on beef jerky, you already understand half of what làròu is. The other half is what makes it its own thing.</p>
+    </div>
+    <div class="table-scroll reveal">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th scope="col">Cured meat</th>
+            <th scope="col">Cure</th>
+            <th scope="col">Finish</th>
+            <th scope="col">Fat</th>
+            <th scope="col">Bound to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <th scope="row">Làròu <span class="zh" style="font-size:.85em;">臘肉</span></th>
+            <td>Dry salt, sometimes wine or soy</td>
+            <td>Smoked or wind-dried, weeks</td>
+            <td>Full belly, fat left on</td>
+            <td>Winter calendar, New Year table</td>
+          </tr>
+          <tr>
+            <th scope="row">Prosciutto</th>
+            <td>Dry salt</td>
+            <td>Air-dried, months to years</td>
+            <td>Trimmed leg, thin cap</td>
+            <td>No fixed season</td>
+          </tr>
+          <tr>
+            <th scope="row">Bacon</th>
+            <td>Wet or dry brine</td>
+            <td>Smoked, cooked before eating</td>
+            <td>Streaky, rendered when cooked</td>
+            <td>Breakfast, any day</td>
+          </tr>
+          <tr>
+            <th scope="row">Beef jerky</th>
+            <td>Brine or marinade</td>
+            <td>Dried lean, no aging</td>
+            <td>Trimmed off entirely</td>
+            <td>Travel food, snacking</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="raised">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">02 · Etymology</span>
+      <h2>A character that means "the twelfth month"</h2>
+      <p>The word itself is a small piece of the history. Tap each line to open it.</p>
+    </div>
+    <div class="glyph-block reveal">
+      <div class="glyph-big zh">臘</div>
+      <div>
+        <details class="reveal-card" open>
+          <summary>Not the character for "spicy"</summary>
+          <div class="body">Là (臘/腊) is a near-homophone of the là in málà, "numbing-spicy" — but it's an entirely different character, with nothing to do with chili. It's one of the first mix-ups English speakers make when they meet the word, and one of the first things a Chinese menu will quietly correct.</div>
+        </details>
+        <details class="reveal-card">
+          <summary>Originally the name of a month, not a food</summary>
+          <div class="body">Before it described meat, 臘 named 臘月 (làyuè) — the twelfth month of the lunar calendar, deep winter. The month took its name from 臘祭 (làjì), a sacrificial rite offering the year's dried and cured meats to ancestors and household spirits, thanking them for the harvest and asking for protection into the new year.</div>
+        </details>
+        <details class="reveal-card">
+          <summary>Recorded roughly 3,000 years ago</summary>
+          <div class="body">The rite appears in ritual compendia from the Zhou dynasty (c. 1046–256 BCE), including the Rites of Zhou and the Book of Rites — among the oldest surviving descriptions of organized meat preservation anywhere in the world.
+            <span class="note">Meat cured "for the 臘 rite" became 臘肉 — literally "twelfth-month meat." The name stuck long after the rite faded from daily life, which is why làròu today is made, and eaten, at any point in winter.</span>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">03 · A history</span>
+      <h2>From temple offering to family freezer</h2>
+      <p>Three thousand years is a long supply chain. Here's how a ritual became a pantry staple.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-date">C. 1046–256 BCE · ZHOU DYNASTY</div>
+        <h3>A sacrifice, not a snack</h3>
+        <p>The earliest recorded curing is ceremonial: meat dried and salted specifically to be offered to ancestors during the làjì rite at year's end, then shared among the household as a blessing.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">206 BCE – 220 CE · HAN DYNASTY</div>
+        <h3>The ritual becomes a technique</h3>
+        <p>As curing knowledge spread beyond temple households, its real value became obvious: a family's one winter pig, salted and hung, could feed them for months. Preservation started outpacing ceremony.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">1368–1912 · MING &amp; QING DYNASTIES</div>
+        <h3>One method, many dialects</h3>
+        <p>Migration and trade carried the practice into wildly different climates. Sichuan reached for chili and pine smoke; Guangdong's warm, wet winters favored wind and rice wine over any smokehouse at all. The regional styles eaten today mostly date from this stretch.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">20TH CENTURY</div>
+        <h3>A countdown you could see</h3>
+        <p>Làròu became the visible clock of the Lunar New Year — strips of meat drying on apartment balconies and rooftops across China each December, a neighborhood-wide sign the reunion dinner was close.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-date">TODAY</div>
+        <h3>Hanging on, further from home</h3>
+        <p>Vacuum-sealed and shipped worldwide, làròu now hangs in Chinatown markets from San Francisco to Flushing — carried, quite literally, by the families who grew up with it on the rafter each winter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="raised">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">04 · Regional styles</span>
+      <h2>Same idea, five very different smokehouses</h2>
+      <p>"Làròu" is an umbrella, not a recipe. Climate and local taste pulled it in different directions.</p>
+    </div>
+    <div class="carousel reveal">
+      <div class="region-card">
+        <div class="swatch" style="background:#8C2E1D;"></div>
+        <span class="place">Sichuan &amp; Chongqing</span>
+        <h3>Chili and mountain pine</h3>
+        <p>Pork belly rubbed with chili and Sichuan pepper before it ever meets smoke, then hung over cypress or pine. The result carries heat, numbing spice, and campfire in one bite.</p>
+      </div>
+      <div class="region-card">
+        <div class="swatch" style="background:#6E2415;"></div>
+        <span class="place">Hunan</span>
+        <h3>Smoked hardest, smoked longest</h3>
+        <p>Often cured over tea leaves, orange peel, or sugarcane husks for weeks, until the meat turns deep amber and the smoke flavor is unmistakably the point.</p>
+      </div>
+      <div class="region-card">
+        <div class="swatch" style="background:#B9812A;"></div>
+        <span class="place">Guangdong (Cantonese)</span>
+        <h3>臘肉 with no smoke at all</h3>
+        <p>Marinated in rose-flavored liquor, soy, and sugar, then simply air-dried in cool winter wind — sweeter, glossier, no smokehouse required. Its sibling is 臘腸 (lap cheong), the cured sausage sold in the same string.</p>
+      </div>
+      <div class="region-card">
+        <div class="swatch" style="background:#C9793F;"></div>
+        <span class="place">Yunnan</span>
+        <h3>Salt from the mountain itself</h3>
+        <p>Some Yunnan làròu is cured with brine drawn from ancient mountain salt wells, then smoked over pine and herbs at altitude — a cure shaped by geology as much as season.</p>
+      </div>
+      <div class="region-card">
+        <div class="swatch" style="background:#5B4E3D;"></div>
+        <span class="place">Hakka &amp; Jiangxi</span>
+        <h3>Built to travel</h3>
+        <p>Heavier salt and a drier finish — a legacy of the Hakka, a historically migratory people who needed meat that could survive the road, not just the winter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">05 · The process</span>
+      <h2>Five steps, several weeks, one hook</h2>
+      <p>The method varies by region, but nearly every batch of làròu passes through the same five moves.</p>
+    </div>
+
+    <div class="steps reveal">
+      <input type="radio" name="step" id="s1" checked>
+      <input type="radio" name="step" id="s2">
+      <input type="radio" name="step" id="s3">
+      <input type="radio" name="step" id="s4">
+      <input type="radio" name="step" id="s5">
+
+      <div class="step-tabs">
+        <label for="s1"><span class="n">1</span>Salt</label>
+        <label for="s2"><span class="n">2</span>Marinate</label>
+        <label for="s3"><span class="n">3</span>Hang</label>
+        <label for="s4"><span class="n">4</span>Smoke or dry</label>
+        <label for="s5"><span class="n">5</span>Age</label>
+      </div>
+
+      <div class="step-panels">
+        <div class="step-panel panel-1">
+          <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M6 10l2-6h8l2 6M4 10h16l-1.5 10a2 2 0 01-2 2H7.5a2 2 0 01-2-2z" stroke-linejoin="round"/><path d="M9 14h.01M12 14h.01M15 14h.01" stroke-linecap="round"/></svg></div>
+          <div>
+            <h3>Salt</h3>
+            <p>Coarse salt, sometimes mixed with spice, is rubbed hard into fresh pork belly. Over several days it draws out moisture and begins denaturing the surface — the first and most essential defense against spoilage.</p>
+          </div>
+        </div>
+        <div class="step-panel panel-2">
+          <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3" stroke-linejoin="round"/></svg></div>
+          <div>
+            <h3>Marinate</h3>
+            <p>Depending on the region, the salted meat is worked with rice wine, soy sauce, sugar, or chili — the step where a regional identity actually gets written into the meat.</p>
+          </div>
+        </div>
+        <div class="step-panel panel-3">
+          <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M12 3v4M8 5.5A4 4 0 0012 9a4 4 0 004-3.5" stroke-linecap="round"/><path d="M7 9l-1 12h12L17 9" stroke-linejoin="round"/></svg></div>
+          <div>
+            <h3>Hang</h3>
+            <p>Strung by a cord or hook, the meat goes up somewhere cold and dry — an eave, a balcony, a beam over the stove. Air circulation from here on does most of the remaining work.</p>
+          </div>
+        </div>
+        <div class="step-panel panel-4">
+          <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M4 21c2-4-1-5 1-9M9 21c2-4-1-6 1.5-10M14 21c2-4-1-5 1-9M19 21c2-4-1-6 1.5-10" stroke-linecap="round"/></svg></div>
+          <div>
+            <h3>Smoke or dry</h3>
+            <p>Climate decides this step. Cold, dry mountain regions smoke over wood, tea, or citrus peel for deep flavor. Warm, humid Guangdong skips smoke entirely and trusts the winter wind alone.</p>
+          </div>
+        </div>
+        <div class="step-panel panel-5">
+          <div class="step-icon"><svg viewBox="0 0 24 24"><path d="M8 2h8M8 22h8M9 2c0 5 2 6 2 10s-2 5-2 10M15 2c0 5-2 6-2 10s2 5 2 10" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <h3>Age</h3>
+            <p>Two to four weeks of patience while the meat firms, darkens, and its flavor concentrates — before it's finally sliced thin and steamed, stir-fried, or simmered into a claypot rice.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="deep">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">06 · Why it matters</span>
+      <h2>The smell that means the new year is close</h2>
+    </div>
+    <div class="reveal">
+      <blockquote class="pull">
+        <p>"When the meat goes up on the balcony, you know the new year is coming — before anyone says a word about it."</p>
+        <cite>A saying repeated across households where làròu is made every winter</cite>
+      </blockquote>
+      <div class="prose" style="margin-top:36px;">
+        <p>Làròu's real home isn't the smokehouse — it's the reunion table. For 團年飯 (tuánniánfàn), the Lunar New Year reunion dinner, cured meat is one of the dishes a family is least willing to go without, steamed simply so the months of salt, smoke, and patience speak for themselves.</p>
+        <p>For relatives who've moved away — across a province, or across an ocean — a jar or vacuum-sealed bag of home-cured làròu is a common gift back: not a delicacy exactly, but a specific, unmistakable taste of a specific kitchen, which is a harder thing to give than it sounds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div class="reveal">
+        <span class="eyebrow">Trying it, in the US</span>
+        <h2 style="margin-top:14px;">You don't need a balcony to start</h2>
+        <p>Làròu doesn't require a trip to China to taste — just a Chinese grocery store, a bit of curiosity, and a rice cooker.</p>
+      </div>
+      <ul class="try-list reveal">
+        <li><strong>Chinese grocery stores</strong> Look in the refrigerated or vacuum-packed section, often labeled 臘肉 or by region, e.g. "Sichuan-style bacon."</li>
+        <li><strong>Order it cooked</strong> 臘味煲仔飯 (claypot rice with cured meats) is the easiest, most forgiving way to meet the flavor for the first time.</li>
+        <li><strong>Make it at home</strong> Salt-cured, air-dried versions are approachable for a first attempt — cold, dry weather and patience matter more than equipment.</li>
+      </ul>
+    </div>
+    <div class="colophon">THE WINTER CURE — a short history of 臘肉 (làròu), Chinese cured meat, written for readers meeting it for the first time.</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  })();
+</script>
